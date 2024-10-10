@@ -11,3 +11,6 @@ params = {"page_size": 100}
 
 # Making the request to the Typeform API
 response = requests.get(url, headers=headers, params=params)
+
+# Checking if the request was successful
+
