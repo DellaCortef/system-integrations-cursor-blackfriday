@@ -1,6 +1,10 @@
 import os
 import requests
 import pandas as pd
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Replace with your Typeform API token and form ID
 api_token = "API_TOKEN"
