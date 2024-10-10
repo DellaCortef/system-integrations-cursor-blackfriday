@@ -1,4 +1,6 @@
+import os
 import requests
+import pandas as pd
 
 # Replace with your Typeform API token and form ID
 api_token = "API_TOKEN"
