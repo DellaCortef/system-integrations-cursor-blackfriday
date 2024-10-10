@@ -1,4 +1,4 @@
-# system-integrations-cursor-blackfriday
+### system-integrations-cursor-blackfriday
 
 # Creating a data extraction flow.
 
