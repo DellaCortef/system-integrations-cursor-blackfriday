@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Replace with your Typeform API token and form ID
-api_token = "API_TOKEN"
-form_id   = "FORM_ID"
+api_token = os.getenv('TYPEFORM_API_TOKEN')
+form_id   = os.getenv('TYPEFORM_FORM_ID')
 
 # Typeform Responses API URL
 url = f"https://api.typeform.com/forms/{form_id}/responses"
