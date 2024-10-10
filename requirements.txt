@@ -2,7 +2,7 @@ altair==5.4.1
 google-analytics-data==0.18.12
 google-auth==2.35.0
 google-auth-oauthlib==1.2.1
-numpy==2.1.2
+numpy==2.0.2
 andas==2.2.3
 pillow==10.4.0
 psycopg2-binary==2.9.9
