@@ -13,4 +13,6 @@ params = {"page_size": 100}
 response = requests.get(url, headers=headers, params=params)
 
 # Checking if the request was successful
+print(response.json())
+
 
