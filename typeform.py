@@ -14,74 +14,52 @@ FORM_ID = os.getenv('TYPEFORM_FORM_ID')
 # Typeform Responses API URL
 url = f"https://api.typeform.com/forms/{FORM_ID}/responses"
 headers = {"Authorization": f"Bearer {TYPEFORM_API_TOKEN}"}
-params = {"page_size": 1000}  # Aumentado para obter mais respostas
+params = {"page_size": 100}  # Aumentado para obter mais respostas
 
-# Configuração do banco de dados
-DATABASE_URL = os.getenv('DATABASE_URL')
-engine = create_engine(DATABASE_URL)
+# Making the Typeform API request
+response = requests.get(url, headers=headers, params=params)
 
-def get_typeform_responses():
-    url = f"https://api.typeform.com/forms/{FORM_ID}/responses"
-    headers = {
-        "Authorization": f"Bearer {TYPEFORM_API_TOKEN}"
-    }
-    params = {
-        "page_size": 1000,
-        "completed": "true"
-    }
+# Verifying the response status
+if response.status_code == 200:
+    # Obtaining request data
+    data = response.json()
 
-    responses = []
-    while True:
-        response = requests.get(url, headers=headers, params=params)
-        response.raise_for_status()
-        data = response.json()
-        responses.extend(data['items'])
-        
-        if data['page_count'] == data['total_items']:
-            break
-        
-        params['before'] = data['items'][-1]['submitted_at']
+    # Extracting the answers
+    responses = data['items']
 
-    return responses
+    # Creates a list to store formatted data
+    formatted_responses = []
 
-def process_responses(responses):
-    processed_data = []
     for resp in responses:
-        if resp is not None and 'answers' in resp and resp['answers'] is not None:
-            row = {
-                'response_id': resp['response_id'],
-                'submitted_at': resp['submitted_at']
-            }
-            for answer in resp['answers']:
-                question_id = answer['field']['id']
-                question_type = answer['type']
-                
-                if question_type in ['text', 'number', 'date']:
-                    row[question_id] = answer[question_type]
-                elif question_type == 'choice':
-                    row[question_id] = answer['choice']['label']
-                elif question_type == 'choices':
-                    row[question_id] = ', '.join([choice['label'] for choice in answer['choices']['labels']])
-            
-            processed_data.append(row)
-    
-    return pd.DataFrame(processed_data)
+        formatted_resp = {
+            'submitted_at': resp['submitted_at'],
+            'response_id': resp['response_id']
+        }
 
-try:
-    # Obtém as respostas do Typeform
-    responses = get_typeform_responses()
+        # Add answers to each question
+        for answer in resp['answers']:
+            question_id = answer['field']['id']
+            question_type = answer['type']
 
-    # Processa as respostas em um DataFrame
-    df = process_responses(responses)
+            if question_type in ['text', 'number', 'date']:
+                formatted_resp[question_id] = answer[question_type]
+            elif question_type == 'choice':
+                formatted_resp[question_id] = answer['choice']['label']
+            elif question_type == 'choices':
+                formatted_resp[question_id] = ', '.join([choice['label'] for choice in answer['choices']['labels']])
+        
+        formatted_responses.append(formatted_resp)
 
-    # Salva o DataFrame no banco de dados
-    df.to_sql('typeform', engine, if_exists='replace', index=False)
+    # Creates a DataFrame with formatted responses
+    df = pd.DataFrame(formatted_responses)
 
-    print("As respostas foram salvas no banco de dados.")
+    # Configuring the connection to the PostgreSQL Database
+    db_url = os.getenv('DATABASE_URL')
+    engine = create_engine(db_url)
 
-except requests.exceptions.RequestException as e:
-    print(f"Erro ao fazer a requisição: {e}")
-except KeyError as e:
-    print(f"Erro ao acessar dados da resposta: {e}")
-except Exception as e:
-    print(f"Ocorreu um erro inesperado: {e}")
+    # Stores the DataFrame in the Database 'typeform_responses' table
+    df.to_sql(name='typeform_responses', con=engine, if_exists='append', index=False)
+
+    print('Data saved successfully in PostgreSQL!')
+else:
+    print(f"Error: {response.status_code}")
