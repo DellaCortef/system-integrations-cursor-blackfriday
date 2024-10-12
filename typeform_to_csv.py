@@ -11,6 +11,11 @@ load_dotenv()
 TYPEFORM_API_TOKEN = os.getenv('TYPEFORM_API_TOKEN')
 FORM_ID = os.getenv('TYPEFORM_FORM_ID')
 
+# Typeform Responses API URL
+url = f"https://api.typeform.com/forms/{FORM_ID}/responses"
+headers = {"Authorization": f"Bearer {TYPEFORM_API_TOKEN}"}
+params = {"page_size": 100}  # Augmented for more responses
+
 response = requests.get(f'https://api.typeform.com/forms/{FORM_ID}/responses')
 
 print(response.json())
