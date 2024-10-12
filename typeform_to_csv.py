@@ -16,6 +16,6 @@ url = f"https://api.typeform.com/forms/{FORM_ID}/responses"
 headers = {"Authorization": f"Bearer {TYPEFORM_API_TOKEN}"}
 params = {"page_size": 100}  # Augmented for more responses
 
-response = requests.get(f'https://api.typeform.com/forms/{FORM_ID}/responses')
+response = requests.get(url, headers=headers, params=params)
 
 print(response.json())
