@@ -18,4 +18,15 @@ params = {"page_size": 100}  # Augmented for more responses
 
 response = requests.get(url, headers=headers, params=params)
 
-print(response.json())
+# Check if the request was successful
+if response.status_code == 200:
+    # Obtain the data from the responses
+    data = response.json()
+
+    # Extract the responses from the data
+    responses = data['items']
+
+    # Creating a list to store the responses
+    formatted_responses = []
+
+    
