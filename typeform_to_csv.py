@@ -59,4 +59,3 @@ if response.status_code == 200:
     print(f"CSV file '{csv_filename}' has been created successfully.")
 else:
     print(f"Failed to retrieve data. Status code: {response.status_code}")
-    print(response.json())  # Print the error details   
