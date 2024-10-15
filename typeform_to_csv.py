@@ -35,19 +35,19 @@ if response.status_code == 200:
             'response_id': resp['response_id']
         }
 
-        # Adding the answers to the response
-        for answer in resp['answers']:
-            question_id = answer['field']['id']
-            question_type = answer['type']
+    # Adding the answers to the response
+    for answer in resp['answers']:
+        question_id = answer['field']['id']
+        question_type = answer['type']
 
-            if question_type in ['text', 'number', 'date']:
-                formatted_resp[question_id] = answer[question_type]
-            elif question_type == 'choice':
-                formatted_resp[question_id] = answer['choice']['label']
-            elif question_type == 'choices':
-                formatted_resp[question_id] = ', '.join([choice['label'] for choice in answer['choices']['labels']])
+        if question_type in ['text', 'number', 'date']:
+            formatted_resp[question_id] = answer[question_type]
+        elif question_type == 'choice':
+            formatted_resp[question_id] = answer['choice']['label']
+        elif question_type == 'choices':
+            formatted_resp[question_id] = ', '.join([choice['label'] for choice in answer['choices']['labels']])
         
-        formatted_responses.append(formatted_resp)
+    formatted_responses.append(formatted_resp)
 
     # Create a DataFrame from the formatted responses
     df = pd.DataFrame(formatted_responses)
