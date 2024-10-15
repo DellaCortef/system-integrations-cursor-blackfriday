@@ -47,7 +47,7 @@ if response.status_code == 200:
         elif question_type == 'choices':
             formatted_resp[question_id] = ', '.join([choice['label'] for choice in answer['choices']['labels']])
         
-    formatted_responses.append(formatted_resp)
+        formatted_responses.append(formatted_resp)
 
     # Create a DataFrame from the formatted responses
     df = pd.DataFrame(formatted_responses)
