@@ -52,10 +52,13 @@ if response.status_code == 200:
     # Create a DataFrame from the formatted responses
     df = pd.DataFrame(formatted_responses)
 
-    # Save the DataFrame to a CSV file
-    csv_filename = 'typeform_responses.csv'
-    df.to_csv(csv_filename, index=False)
+    # Configuring the connection to the PostgreSQl database
+    db_url = 'DATABASE_URL'
+    engine = create_engine(db_url)
 
-    print(f"CSV file '{csv_filename}' has been created successfully.")
+    # Write the DataFrame to the database 'typeform_responses'
+    df.to_sql(name = 'typeform_responses', con=engine, if_exists='replace', index=False)
+
+    print("The responses were saved in the PostgreSQl database.")
 else:
     print(f"Failed to retrieve data. Status code: {response.status_code}")
