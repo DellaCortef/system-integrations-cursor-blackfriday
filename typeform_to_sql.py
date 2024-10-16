@@ -61,4 +61,4 @@ if response.status_code == 200:
 
     print("The responses were saved in the PostgreSQl database.")
 else:
-    print(f"Failed to retrieve data. Status code: {response.status_code}") 
+    print(f"Failed to retrieve data. Status code: {response.status_code}")
