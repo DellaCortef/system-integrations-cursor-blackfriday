@@ -53,7 +53,7 @@ if response.status_code == 200:
     df = pd.DataFrame(formatted_responses)
 
     # Configuring the connection to the PostgreSQl database
-    db_url = 'DATABASE_URL'
+    db_url = os.getenv('DATABASE_URL')
     engine = create_engine(db_url)
 
     # Write the DataFrame to the database 'typeform_responses'
